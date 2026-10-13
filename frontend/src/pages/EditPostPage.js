@@ -86,13 +86,11 @@ const EditPostPage = () => {
                     : []
             };
 
-            console.log("Updating post with ID:", id, postData);
             await api.updatePost(id, postData);
             toast.success('Post updated successfully!');
             navigate('/my-posts');
         } catch (error) {
             toast.error(error.message || 'Failed to update post');
-            console.error(error);
         } finally {
             setSaving(false);
         }

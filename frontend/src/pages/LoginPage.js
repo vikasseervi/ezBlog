@@ -26,9 +26,11 @@ const LoginPage = () => {
             login(response.user);
             toast.success('Welcome back!');
             navigate('/');
-        } catch (error) {
+        }
+        catch (error) {
             toast.error(error.message || 'Login failed');
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     };

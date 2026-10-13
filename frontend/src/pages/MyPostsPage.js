@@ -97,7 +97,6 @@ const MyPostsPage = () => {
                                         </div>
 
                                         <Link to={`/post/${post.id}`}>
-                                            {console.log("banty",post.id)}
                                             <h2 className="text-2xl font-bold text-gray-100 mb-2 hover:text-primary-400 transition-colors">
                                                 {post.title}
                                             </h2>

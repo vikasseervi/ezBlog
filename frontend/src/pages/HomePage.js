@@ -57,7 +57,7 @@ const HomePage = () => {
             filtered = filtered.filter((post) =>
                 post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                post.author.name.toLowerCase().includes(searchQuery.toLowerCase())
+                post.author?.name?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 

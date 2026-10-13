@@ -14,7 +14,7 @@ const CreatePostPage = () => {
         category: 'Technology',
         tags: ''
     });
-    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     const categories = [
         'Technology',
@@ -43,7 +43,7 @@ const CreatePostPage = () => {
             return;
         }
 
-        setLoading(true);
+        setSaving(true);
         try {
             const postData = {
                 title: formData.title,
@@ -62,7 +62,7 @@ const CreatePostPage = () => {
             toast.error('Failed to create post');
             console.error(error);
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
 
@@ -169,10 +169,9 @@ const CreatePostPage = () => {
                     <div className="flex items-center space-x-4">
                         <button
                             type="submit"
-                            disabled={loading}
-                            className="btn-primary flex items-center space-x-2"
-                        >
-                            {loading ? (
+                            disabled={saving}
+                            className="btn-primary flex items-center space-x-2">
+                            {saving ? (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                             ) : (
                                 <>
@@ -184,8 +183,7 @@ const CreatePostPage = () => {
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="btn-secondary flex items-center space-x-2"
-                        >
+                            className="btn-secondary flex items-center space-x-2">
                             <X size={18} />
                             <span>Cancel</span>
                         </button>

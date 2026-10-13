@@ -121,9 +121,9 @@ const PostDetailPage = () => {
 
                 <article className="card">
                     <div className="flex items-center justify-between mb-4">
-            <span className={`badge ${getCategoryColor(post.category)}`}>
-              {post.category}
-            </span>
+                        <span className={`badge ${getCategoryColor(post.category)}`}>
+                          {post.category}
+                        </span>
                         {isAuthor && (
                             <div className="flex items-center space-x-2">
                                 <Link
@@ -149,9 +149,9 @@ const PostDetailPage = () => {
                     <div className="flex items-center justify-between pb-6 border-b border-gray-800 mb-8">
                         <div className="flex items-center space-x-4">
                             <div className="w-12 h-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-semibold text-lg">
-                  {post.author?.name?.charAt(0).toUpperCase()}
-                </span>
+                                <span className="text-white font-semibold text-lg">
+                                  {post.author?.name?.charAt(0).toUpperCase()}
+                                </span>
                             </div>
                             <div>
                                 <p className="text-lg font-semibold text-gray-200">
@@ -188,8 +188,8 @@ const PostDetailPage = () => {
                                         key={index}
                                         className="badge badge-gray"
                                     >
-                    {tag}
-                  </span>
+                                        {tag}
+                                    </span>
                                 ))}
                             </div>
                         </div>

@@ -30,9 +30,9 @@ const PostCard = ({ post }) => {
         <Link to={`/post/${post.id}`} className="block">
             <article className="card hover:shadow-xl group">
                 <div className="flex items-start justify-between mb-3">
-          <span className={`badge ${getCategoryColor(post.category)}`}>
-            {post.category}
-          </span>
+                    <span className={`badge ${getCategoryColor(post.category)}`}>
+                        {post.category}
+                    </span>
                     <div className="flex items-center text-gray-500 text-sm">
                         <Clock size={14} className="mr-1" />
                         <span>{post.readTime} min read</span>
@@ -50,9 +50,9 @@ const PostCard = ({ post }) => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                     <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-semibold">
-                {post.author?.name?.charAt(0).toUpperCase()}
-              </span>
+                          <span className="text-white text-sm font-semibold">
+                            {post.author?.name?.charAt(0).toUpperCase()}
+                          </span>
                         </div>
                         <div>
                             <p className="text-sm font-medium text-gray-200">
@@ -68,12 +68,9 @@ const PostCard = ({ post }) => {
                     {post.tags && post.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                             {post.tags.slice(0, 2).map((tag, index) => (
-                                <span
-                                    key={index}
-                                    className="text-xs px-2 py-1 bg-gray-custom text-gray-400 rounded-md border border-gray-700"
-                                >
-                  {tag}
-                </span>
+                                <span key={index} className="text-xs px-2 py-1 bg-gray-custom text-gray-400 rounded-md border border-gray-700">
+                                    {tag}
+                                </span>
                             ))}
                         </div>
                     )}

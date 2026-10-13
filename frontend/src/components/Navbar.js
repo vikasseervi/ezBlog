@@ -26,9 +26,9 @@ const Navbar = () => {
                     <div className="flex items-center space-x-8">
                         <Link to="/" className="flex items-center space-x-2">
                             <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-lg">B</span>
+                                <span className="text-white font-bold text-lg">ez</span>
                             </div>
-                            <span className="text-xl font-bold text-gray-100">BlogPlatform</span>
+                            <span className="text-xl font-bold text-gray-100">Blog</span>
                         </Link>
 
                         <div className="hidden md:flex items-center space-x-1">
@@ -70,13 +70,13 @@ const Navbar = () => {
                         <div className="flex items-center space-x-3 pl-4 border-l border-gray-700">
                             <div className="flex items-center space-x-2">
                                 <div className="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-semibold">
-                    {user?.name?.charAt(0).toUpperCase()}
-                  </span>
+                                  <span className="text-white text-sm font-semibold">
+                                    {user?.name?.charAt(0).toUpperCase()}
+                                  </span>
                                 </div>
                                 <span className="hidden md:inline text-sm font-medium text-gray-300">
-                  {user?.name}
-                </span>
+                                    {user?.name}
+                                </span>
                             </div>
 
                             <button
