@@ -8,11 +8,13 @@ import CreatePostPage from './pages/CreatePostPage';
 import EditPostPage from './pages/EditPostPage';
 import PostDetailPage from './pages/PostDetailPage';
 import { useAuth } from './context/AuthContext';
+import LoadingSpinner from './components/LoadingSpinner';
 
 function App() {
-  const { user } = useAuth();
 
-  return (
+    const { user, loading } = useAuth();
+
+    return (
       <div className="App min-h-screen bg-black">
         <Toaster
             position="top-center"
@@ -36,16 +38,19 @@ function App() {
               }
             }}
         />
-        <Routes>
-          <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
-          <Route path="/" element={user ? <HomePage /> : <Navigate to="/login" />} />
-          <Route path="/my-posts" element={user ? <MyPostsPage /> : <Navigate to="/login" />} />
-          <Route path="/create" element={user ? <CreatePostPage /> : <Navigate to="/login" />} />
-          <Route path="/edit/:id" element={user ? <EditPostPage /> : <Navigate to="/login" />} />
-          <Route path="/post/:id" element={user ? <PostDetailPage /> : <Navigate to="/login" />} />
-        </Routes>
+        { loading ?
+            <LoadingSpinner/> :
+            <Routes>
+              <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
+              <Route path="/" element={user ? <HomePage /> : <Navigate to="/login" />} />
+              <Route path="/my-posts" element={user ? <MyPostsPage /> : <Navigate to="/login" />} />
+              <Route path="/create" element={user ? <CreatePostPage /> : <Navigate to="/login" />} />
+              <Route path="/edit/:id" element={user ? <EditPostPage /> : <Navigate to="/login" />} />
+              <Route path="/post/:id" element={user ? <PostDetailPage /> : <Navigate to="/login" />} />
+            </Routes>
+        }
       </div>
-  );
+    );
 }
 
 export default App;

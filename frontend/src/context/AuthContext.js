@@ -10,7 +10,7 @@ export const useAuth = () => {
     return context;
 };
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ( { children: childrenComponent }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -32,13 +32,13 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
     };
 
-    const value = {
+    const authData = {
         user,
         login,
         logout,
         loading
     };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={authData}>{childrenComponent}</AuthContext.Provider>;
 };
 
