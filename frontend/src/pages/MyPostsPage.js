@@ -5,6 +5,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { api } from '../utils/api';
 import toast from 'react-hot-toast';
 import { Edit2, Trash2, Calendar, Clock, PenSquare } from 'lucide-react';
+import { formatDate } from '../utils/formatDate';
 
 const MyPostsPage = () => {
     const [posts, setPosts] = useState([]);
@@ -37,15 +38,6 @@ const MyPostsPage = () => {
             toast.error('Failed to delete post');
             console.error(error);
         }
-    };
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-        });
     };
 
     return (

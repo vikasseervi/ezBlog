@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LogOut, PenSquare, Home, FileText } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -59,6 +60,7 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex items-center space-x-4">
+                        <ThemeToggle />
                         <Link
                             to="/create"
                             className="btn-primary flex items-center space-x-2"

@@ -117,3 +117,123 @@
   @apply text-primary-500 hover:text-primary-400 transition-colors;
 }
 
+
+/* ================= THEME VARIABLES ================= */
+:root {
+  color-scheme: dark;
+  --toast-bg: #26262B;
+  --toast-text: #F5F5F6;
+  --toast-border: #3F3F46;
+}
+
+.light {
+  color-scheme: light;
+  --page: #FAFAFA;
+  --surface: #FFFFFF;
+  --surface-2: #F4F4F5;
+  --surface-3: #E4E4E7;
+  --line: #E4E4E7;
+  --line-strong: #D4D4D8;
+  --text-1: #18181B;
+  --text-2: #3F3F46;
+  --text-3: #52525B;
+  --text-4: #71717A;
+  --toast-bg: #EEEEF1;
+  --toast-text: #18181B;
+  --toast-border: #D4D4D8;
+}
+
+/* ================= LIGHT MODE ================= */
+@layer base {
+  .light * { border-color: var(--line); }
+}
+
+.light body { background: var(--page); color: var(--text-1); }
+
+/* Backgrounds */
+.light .bg-black { background-color: var(--page); }
+.light .bg-gray-custom { background-color: var(--surface); }
+.light .bg-gray-950 { background-color: var(--surface-2); }
+.light .hover\:bg-gray-700:hover { background-color: var(--surface-3); }
+.light .hover\:bg-gray-800:hover,
+.light .hover\:bg-gray-900:hover { background-color: var(--surface-2); }
+
+/* Text */
+.light .text-gray-50,
+.light .text-gray-100,
+.light .text-gray-200,
+.light .hover\:text-gray-100:hover { color: var(--text-1); }
+.light .text-gray-300 { color: var(--text-2); }
+.light .text-gray-400 { color: var(--text-3); }
+.light .text-gray-500 { color: var(--text-4); }
+.light .text-gray-600 { color: #A1A1AA; }
+
+/* Brand and status text (lighter shades are too faint on white) */
+.light .text-primary-400,
+.light .hover\:text-primary-400:hover,
+.light .group:hover .group-hover\:text-primary-400 { @apply text-primary-600; }
+.light .text-error-400,
+.light .hover\:text-error-400:hover { @apply text-error-600; }
+
+/* Borders */
+.light .border-gray-700 { border-color: var(--line-strong); }
+.light .border-gray-800,
+.light .border-gray-900 { border-color: var(--line); }
+
+/* Category badge text (PostCard / PostDetailPage) */
+.light .text-teal-400 { color: #0F766E; }
+.light .text-amber-400 { color: #B45309; }
+.light .text-success-400 { color: #067647; }
+.light .text-orange-400 { color: #C2410C; }
+.light .text-blue-400 { color: #1D4ED8; }
+.light .text-green-400 { color: #15803D; }
+.light .text-indigo-400 { color: #4338CA; }
+.light .text-pink-400 { color: #BE185D; }
+
+/* Components (their dark colors are baked in, so they need their own overrides) */
+.light .btn-secondary { background: var(--surface-2); color: var(--text-1); border-color: var(--line-strong); }
+.light .btn-secondary:hover { background: var(--surface-3); }
+.light .btn-ghost { color: var(--text-3); }
+.light .btn-ghost:hover { color: var(--text-1); background: var(--surface-2); }
+.light .input-field { background: var(--surface); color: var(--text-1); border-color: var(--line-strong); }
+.light .input-field::placeholder { color: #A1A1AA; }
+.light .card { background: var(--surface); border-color: var(--line); }
+.light .card:hover { border-color: var(--line-strong); }
+.light .badge-primary { @apply text-primary-700; }
+.light .badge-gray { background: var(--surface-2); color: var(--text-3); border-color: var(--line-strong); }
+
+/* Post content (markdown) */
+.light .prose { color: var(--text-2); }
+.light .prose h1, .light .prose h2, .light .prose h3, .light .prose h4 { color: var(--text-1); }
+.light .prose code { background: var(--surface-2); color: var(--text-1); border-color: var(--line); }
+.light .prose pre { background: var(--surface-2); color: var(--text-2); border-color: var(--line); }
+.light .prose pre code { background: transparent; color: var(--text-2); }
+.light .prose blockquote { color: var(--text-3); }
+.light .prose a { @apply text-primary-600; }
+.light .prose a:hover { @apply text-primary-700; }
+
+/* Scrollbar */
+.light::-webkit-scrollbar-track, .light *::-webkit-scrollbar-track { background: var(--page); }
+.light::-webkit-scrollbar-thumb, .light *::-webkit-scrollbar-thumb { background: #D4D4D8; }
+.light::-webkit-scrollbar-thumb:hover, .light *::-webkit-scrollbar-thumb:hover { @apply bg-primary-600; }
+
+/* Theme toggle: inverted against the current theme */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: #F5F5F6;
+  color: #09090B;
+  border: 1px solid #D4D4D8;
+  transition: background-color 0.2s;
+}
+.theme-toggle:hover { background: #FFFFFF; }
+
+.light .theme-toggle {
+  background: #09090B;
+  color: #FAFAFA;
+  border-color: #27272A;
+}
+.light .theme-toggle:hover { background: #27272A; }

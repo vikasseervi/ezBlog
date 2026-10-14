@@ -20,9 +20,9 @@ function App() {
             position="top-center"
             toastOptions={{
               style: {
-                background: '#0F0F11',
-                color: '#F5F5F6',
-                border: '1px solid #27272A'
+                background: 'var(--toast-bg)',
+                color: 'var(--toast-text)',
+                border: '1px solid var(--toast-border)'
               },
               success: {
                 iconTheme: {

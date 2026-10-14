@@ -6,6 +6,7 @@ import { api } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { Calendar, Clock, Edit2, Trash2, ArrowLeft } from 'lucide-react';
+import { formatDate } from '../utils/formatDate';
 
 const PostDetailPage = () => {
     const { id } = useParams();
@@ -40,15 +41,6 @@ const PostDetailPage = () => {
             toast.error('Failed to delete post');
             console.error(error);
         }
-    };
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric'
-        });
     };
 
     const getCategoryColor = (category) => {

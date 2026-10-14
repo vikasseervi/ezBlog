@@ -1,16 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, Calendar } from 'lucide-react';
+import { formatDate } from '../utils/formatDate';
 
 const PostCard = ({ post }) => {
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-        });
-    };
 
     const getCategoryColor = (category) => {
         const colors = {

@@ -4,6 +4,7 @@ import { LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../utils/api';
 import toast from 'react-hot-toast';
+import ThemeToggle from '../components/ThemeToggle';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -37,6 +38,7 @@ const LoginPage = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-black">
+            <div className="fixed top-4 right-4"><ThemeToggle /></div>
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl mb-4">
