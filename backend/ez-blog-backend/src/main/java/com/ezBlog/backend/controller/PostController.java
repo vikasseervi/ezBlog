@@ -1,174 +1,71 @@
 package com.ezBlog.backend.controller;
 
-import com.ezBlog.backend.model.Post;
+import com.ezBlog.backend.model.PostPageResponse;
 import com.ezBlog.backend.model.PostRequest;
-import com.ezBlog.backend.model.User;
+import com.ezBlog.backend.model.PostResponse;
+import com.ezBlog.backend.security.ApiPaths;
 import com.ezBlog.backend.service.PostService;
-import com.ezBlog.backend.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping(ApiPaths.BASE + "/posts")
 public class PostController {
-    @Autowired
-    private PostService postService;
 
-    @Autowired
-    private UserService userService;
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @GetMapping
-    public ResponseEntity<?> getAllPosts() {
-        try {
-            List<Post> posts = postService.findAllPublishedPosts();
-            Map<String, Object> response = new HashMap<>();
-            response.put("posts", posts);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Server error fetching posts");
-        }
+    public PostPageResponse getAllPosts(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(required = false) String category,
+                                        @RequestParam(required = false) String q) {
+        return postService.findPublishedPosts(page, size, category, q);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPostById(@PathVariable("id") String id) {
-        try {
-            if (id == null || id.equals("undefined") || id.trim().isEmpty()) {
-                return ResponseEntity.status(400).body("Invalid post ID");
-            }
-
-            Long postId;
-            try {
-                postId = Long.parseLong(id);
-            } catch (NumberFormatException e) {
-                return ResponseEntity.status(400).body("Invalid post ID format");
-            }
-
-            Optional<Post> post = postService.findById(postId);
-            if (post.isEmpty()) {
-                return ResponseEntity.status(404).body("Post not found");
-            }
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("post", post.get());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Server error fetching post");
-        }
+    public Map<String, Object> getPostById(@PathVariable Long id, Authentication authentication) {
+        // Public endpoint: authentication is null for visitors, set if they sent a valid token
+        return Map.of("post", postService.getVisiblePost(id, currentEmail(authentication)));
     }
 
     @GetMapping("/my-posts")
-    public ResponseEntity<?> getMyPosts(@RequestHeader(value = "x-user-id", required = false) Long userId) {
-        try {
-            if (userId == null) {
-                return ResponseEntity.status(401).body("Not authenticated");
-            }
-
-            List<Post> posts = postService.findByAuthorId(userId);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("posts", posts);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Server error fetching posts");
-        }
+    public Map<String, Object> getMyPosts(Authentication authentication) {
+        return Map.of("posts", postService.findMyPosts(authentication.getName()));
     }
 
     @PostMapping
-    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest postRequest,
-                                        @RequestHeader(value = "x-user-id", required = false) Long userId) {
-        try {
-            if (userId == null) {
-                return ResponseEntity.status(401).body("Not authenticated");
-            }
-
-            Post post = postService.createPost(postRequest, userId);
-
-            return ResponseEntity.status(201).body(post);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Server error creating post");
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public PostResponse createPost(@Valid @RequestBody PostRequest postRequest, Authentication authentication) {
+        return postService.createPost(postRequest, authentication.getName());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable("id") String id,
-                                        @Valid @RequestBody PostRequest postRequest,
-                                        @RequestHeader(value = "x-user-id", required = false) Long userId) {
-        try {
-            if (id == null || id.equals("undefined") || id.trim().isEmpty()) {
-                return ResponseEntity.status(400).body("Invalid post ID");
-            }
-
-            Long postId;
-            try {
-                postId = Long.parseLong(id);
-            } catch (NumberFormatException e) {
-                return ResponseEntity.status(400).body("Invalid post ID format");
-            }
-
-            if (userId == null) {
-                return ResponseEntity.status(401).body("Not authenticated");
-            }
-
-            User user = userService.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            Post updatedPost = postService.updatePost(postId, postRequest, user);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Post updated successfully");
-            response.put("post", updatedPost);
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Server error updating post");
-        }
+    public Map<String, Object> updatePost(@PathVariable Long id,
+                                          @Valid @RequestBody PostRequest postRequest,
+                                          Authentication authentication) {
+        PostResponse updated = postService.updatePost(id, postRequest, authentication.getName());
+        return Map.of("message", "Post updated successfully", "post", updated);
     }
-
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable("id") String id,
-                                        @RequestHeader(value = "x-user-id", required = false) Long userId) {
-        try {
-            if (id == null || id.equals("undefined") || id.trim().isEmpty()) {
-                return ResponseEntity.status(400).body("Invalid post ID");
-            }
-
-            Long postId;
-            try {
-                postId = Long.parseLong(id);
-            } catch (NumberFormatException e) {
-                return ResponseEntity.status(400).body("Invalid post ID format");
-            }
-
-            if (userId == null) {
-                return ResponseEntity.status(401).body("Not authenticated");
-            }
-
-            Optional<Post> existingPost = postService.findById(postId);
-            if (existingPost.isEmpty()) {
-                return ResponseEntity.status(404).body("Post not found");
-            }
-
-            Post post = existingPost.get();
-            if (!post.getAuthor().getId().equals(userId)) {
-                return ResponseEntity.status(403).body("Not authorized to delete this post");
-            }
-
-            postService.deletePost(postId, userId);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Post deleted successfully");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Server error deleting post");
-        }
+    public Map<String, String> deletePost(@PathVariable Long id, Authentication authentication) {
+        postService.deletePost(id, authentication.getName());
+        return Map.of("message", "Post deleted successfully");
     }
 
+    private static String currentEmail(Authentication authentication) {
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        return authentication.getName();
+    }
 }

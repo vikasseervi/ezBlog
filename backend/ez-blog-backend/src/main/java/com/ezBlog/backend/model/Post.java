@@ -1,47 +1,54 @@
 package com.ezBlog.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.Instant;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "posts")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Title is required")
+    @Size(max = 200)
+    @Column(nullable = false, length = 200)
     private String title;
 
     @NotBlank(message = "Content is required")
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(columnDefinition = "TEXT")
     private String excerpt;
 
     @NotNull(message = "Author is required")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
     @NotBlank(message = "Category is required")
+    @Column(nullable = false, length = 50)
     private String category;
 
+    @org.hibernate.annotations.BatchSize(size = 50)  // This let Hibernate fetch the tags in batches of 50
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
-    @Column(name = "tag")
+    @Column(name = "tag", length = 30)
     private List<String> tags;
 
     @Column(name = "read_time")
@@ -49,35 +56,26 @@ public class Post {
 
     private Boolean published = true;
 
-    @Column(name = "created_at")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
-    @Column(name = "updated_at")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        createdAt = Instant.now();
+        updatedAt = createdAt;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = Instant.now();
     }
 
-    // Enum for categories
+    // Enum for categories (currently unused: category is stored as free text)
     public enum Category {
-        TECHNOLOGY,
-        LIFESTYLE,
-        TRAVEL,
-        FOOD,
-        BUSINESS,
-        HEALTH,
-        EDUCATION,
-        ENTERTAINMENT
+        TECHNOLOGY, LIFESTYLE, TRAVEL, FOOD, BUSINESS, HEALTH, EDUCATION, ENTERTAINMENT
     }
 
     // Constructor for creating post
@@ -93,4 +91,3 @@ public class Post {
         this.published = published;
     }
 }
-

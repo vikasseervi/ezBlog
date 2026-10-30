@@ -1,37 +1,43 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../utils/api';
 import toast from 'react-hot-toast';
 import ThemeToggle from '../components/ThemeToggle';
+import GoogleButton from '../components/GoogleButton';
+
+// Codes the backend puts in /login?error=<code> when Google sign-in is refused
+const OAUTH_MESSAGES = {
+    oauth_failed: 'Google sign-in failed. Please try again.',
+    email_not_verified: 'Your Google email address is not verified.',
+    account_disabled: 'This account is disabled.',
+};
 
 const LoginPage = () => {
+    const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const code = searchParams.get('error');
+        if (code) toast.error(OAUTH_MESSAGES[code] || 'Sign-in failed.');
+    }, [searchParams]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!email || !password) {
-            toast.error('Please fill in all fields');
-            return;
-        }
-
         setLoading(true);
         try {
-            const response = await api.login(email, password);
-            login(response.user);
+            const loggedInUser = await api.login(email, password);
+            login(loggedInUser);
             toast.success('Welcome back!');
-            navigate('/');
-        }
-        catch (error) {
-            toast.error(error.message || 'Login failed');
-        }
-        finally {
+            navigate('/', { replace: true });
+        } catch (error) {
+            toast.error(error.message);
+        } finally {
             setLoading(false);
         }
     };
@@ -45,15 +51,13 @@ const LoginPage = () => {
                         <span className="text-white font-bold text-2xl">B</span>
                     </div>
                     <h1 className="text-3xl font-bold text-gray-100 mb-2">Welcome Back</h1>
-                    <p className="text-gray-400">Sign in to continue to BlogPlatform</p>
+                    <p className="text-gray-400">Sign in to continue to ezBlog</p>
                 </div>
 
                 <div className="bg-gray-custom border border-gray-800 rounded-xl p-6 shadow-lg">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Email Address
-                            </label>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
                             <input
                                 type="email"
                                 value={email}
@@ -65,9 +69,7 @@ const LoginPage = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Password
-                            </label>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
                             <input
                                 type="password"
                                 value={password}
@@ -93,11 +95,23 @@ const LoginPage = () => {
                             )}
                         </button>
                     </form>
+
+                    <div className="flex items-center my-5">
+                        <div className="flex-1 border-t border-gray-800"></div>
+                        <span className="px-3 text-sm text-gray-500">or</span>
+                        <div className="flex-1 border-t border-gray-800"></div>
+                    </div>
+
+                    <GoogleButton label="Continue with Google" />
                 </div>
+
+                <p className="text-center text-sm text-gray-400 mt-6">
+                    Don't have an account?{' '}
+                    <Link to="/register" className="text-primary-400 hover:text-primary-300">Sign up</Link>
+                </p>
             </div>
         </div>
     );
 };
 
 export default LoginPage;
-

@@ -70,16 +70,18 @@ const Navbar = () => {
                         </Link>
 
                         <div className="flex items-center space-x-3 pl-4 border-l border-gray-700">
-                            <div className="flex items-center space-x-2">
-                                <div className="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
-                                  <span className="text-white text-sm font-semibold">
-                                    {user?.name?.charAt(0).toUpperCase()}
-                                  </span>
+                            <Link to="/profile" title="Your profile">
+                                <div className="flex items-center space-x-2">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
+                                      <span className="text-white text-sm font-semibold">
+                                        {user?.name?.charAt(0).toUpperCase()}
+                                      </span>
+                                    </div>
+                                    <span className="hidden md:inline text-sm font-medium text-gray-300">
+                                        {user?.name}
+                                    </span>
                                 </div>
-                                <span className="hidden md:inline text-sm font-medium text-gray-300">
-                                    {user?.name}
-                                </span>
-                            </div>
+                            </Link>
 
                             <button
                                 onClick={handleLogout}

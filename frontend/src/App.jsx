@@ -9,6 +9,10 @@ import EditPostPage from './pages/EditPostPage';
 import PostDetailPage from './pages/PostDetailPage';
 import { useAuth } from './context/AuthContext';
 import LoadingSpinner from './components/LoadingSpinner';
+import OAuthCallback from "./pages/OAuthCallback";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
+import RegisterPage from "./pages/RegistrationPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
 
@@ -47,6 +51,10 @@ function App() {
               <Route path="/create" element={user ? <CreatePostPage /> : <Navigate to="/login" />} />
               <Route path="/edit/:id" element={user ? <EditPostPage /> : <Navigate to="/login" />} />
               <Route path="/post/:id" element={user ? <PostDetailPage /> : <Navigate to="/login" />} />
+              <Route path="/oauth/callback" element={<OAuthCallback />} />
+              <Route path="/verify-email" element={<VerifyEmailPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Routes>
         }
       </div>

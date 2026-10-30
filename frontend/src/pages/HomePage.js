@@ -2,67 +2,41 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import PostCard from '../components/PostCard';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { api } from '../utils/api';
 import toast from 'react-hot-toast';
 import { Search, Filter } from 'lucide-react';
+import usePosts from '../hooks/usePosts';
+
+const categories = [
+    'All',
+    'Technology',
+    'Lifestyle',
+    'Travel',
+    'Food',
+    'Business',
+    'Health',
+    'Education',
+    'Entertainment'
+];
 
 const HomePage = () => {
-    const [posts, setPosts] = useState([]);
-    const [filteredPosts, setFilteredPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchInput, setSearchInput] = useState('');      // what the user is typing
+    const [searchQuery, setSearchQuery] = useState('');      // the value sent to the server (debounced)
     const [selectedCategory, setSelectedCategory] = useState('All');
 
-    const categories = [
-        'All',
-        'Technology',
-        'Lifestyle',
-        'Travel',
-        'Food',
-        'Business',
-        'Health',
-        'Education',
-        'Entertainment'
-    ];
+    // Wait 400 ms after the last keystroke so we don't send a request per letter
+    useEffect(() => {
+        const timer = setTimeout(() => setSearchQuery(searchInput.trim()), 400);
+        return () => clearTimeout(timer);
+    }, [searchInput]);
+
+    const { posts, loading, error, hasMore, loadMore } = usePosts(
+        selectedCategory === 'All' ? undefined : selectedCategory,   // the server expects no category for "All"
+        searchQuery
+    );
 
     useEffect(() => {
-        fetchPosts();
-    }, []);
-
-    useEffect(() => {
-        filterPosts();
-    }, [searchQuery, selectedCategory, posts]);
-
-    const fetchPosts = async () => {
-        try {
-            const response = await api.getAllPosts();
-            setPosts(response.posts);
-            setFilteredPosts(response.posts);
-        } catch (error) {
-            toast.error('Failed to load posts');
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const filterPosts = () => {
-        let filtered = posts;
-
-        if (selectedCategory !== 'All') {
-            filtered = filtered.filter((post) => post.category === selectedCategory);
-        }
-
-        if (searchQuery) {
-            filtered = filtered.filter((post) =>
-                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                post.author?.name?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        setFilteredPosts(filtered);
-    };
+        if (error) toast.error(error);
+    }, [error]);
 
     return (
         <div className="min-h-screen">
@@ -84,8 +58,8 @@ const HomePage = () => {
                         <input
                             type="text"
                             placeholder="Search posts..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
                             className="input-field pl-12"
                         />
                     </div>
@@ -108,9 +82,9 @@ const HomePage = () => {
                     </div>
                 </div>
 
-                {loading ? (
+                {loading && posts.length === 0 ? (
                     <LoadingSpinner />
-                ) : filteredPosts.length === 0 ? (
+                ) : posts.length === 0 ? (
                     <div className="text-center py-12">
                         <div className="w-16 h-16 bg-gray-950 border border-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Search size={32} className="text-gray-600" />
@@ -121,11 +95,30 @@ const HomePage = () => {
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredPosts.map((post) => (
-                            <PostCard key={post.id} post={post} />
-                        ))}
-                    </div>
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {posts.map((post) => (
+                                <PostCard key={post.id} post={post} />
+                            ))}
+                        </div>
+
+                        {/* Loading the next chunk: small spinner under the posts */}
+                        {loading && (
+                            <div className="w-8 h-8 mx-auto my-8 border-2 border-primary-400 border-t-transparent rounded-full animate-spin"></div>
+                        )}
+
+                        {!loading && hasMore && (
+                            <div className="text-center mt-10">
+                                <button onClick={loadMore} className="btn-primary">
+                                    Load more
+                                </button>
+                            </div>
+                        )}
+
+                        {!loading && !hasMore && (
+                            <p className="text-center text-gray-500 mt-10">You've reached the end</p>
+                        )}
+                    </>
                 )}
             </div>
         </div>
@@ -133,4 +126,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

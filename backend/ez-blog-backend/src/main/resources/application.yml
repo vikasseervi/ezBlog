@@ -1,52 +1,80 @@
 spring:
+  application:
+    name: ezblog
+
   datasource:
-    url: jdbc:h2:mem:ezBlog
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  flyway:
+    # Only the real migrations. The dev seed folder is NOT listed here.
+    locations: classpath:db/migration
+
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
     open-in-view: false
     hibernate:
-      ddl-auto: create-drop
-    show-sql: false
+      # Flyway owns the schema. Hibernate only checks that entities match it.
+      ddl-auto: validate
     properties:
       hibernate:
-        enable_lazy_load_no_trans: false
+        jdbc:
+          time_zone: UTC          # Instant values are written to the DB as UTC
+
   sql:
     init:
-      mode: always
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
-      continue-on-error: false
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+      mode: never                 # no schema.sql / data.sql
+
+  jackson:
+    default-property-inclusion: non_null
+
+  mail:
+    host: ${MAIL_HOST}
+    port: 587
+    username: ${MAIL_USER}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
+            required: true
+
   security:
-    headers:
-      frame-options:
-        mode: SAMEORIGIN
-  mvc:
-    dispatch-options-request: true
-  devtools:
-    restart:
-      enabled: true
-      additional-paths: src/main/java
-    livereload:
-      enabled: true
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid,profile,email
 
 server:
   port: 8080
-  address: 0.0.0.0
+  # Only correct when the app runs behind a TRUSTED reverse proxy (Nginx, load balancer).
+  # Lets Spring see the original https request (HSTS, OAuth redirect URIs).
+  forward-headers-strategy: framework
 
-ezBlog:
-  app:
-    jwtSecret: blogPlatformSecretKey123456789012345678901234567890123456789012345678901234567890
-    jwtExpirationMs: 86400000
+app:
+  jwt:
+    secret: ${JWT_SECRET}           # base64, at least 32 bytes
+    issuer: ezblog
+    access-minutes: 15
+    refresh-days: 7
+  frontend-url: ${FRONTEND_URL}
+  cors:
+    # Comma-separated string. Do NOT write this as a YAML list: @Value can't read YAML lists.
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
+  mail:
+    from: ${MAIL_FROM}
+  verification:
+    ttl-minutes: 60
 
 logging:
   level:
-    com.ezBlog.backend: DEBUG
-    org.springframework.security: DEBUG
+    root: INFO
+    com.ezBlog.backend: INFO

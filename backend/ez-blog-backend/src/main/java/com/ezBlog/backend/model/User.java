@@ -1,71 +1,79 @@
 package com.ezBlog.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
-import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+import java.time.Instant;
+import java.util.Locale;
+
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Name is required")
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    @Column(nullable = false, length = 100)
     private String name;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Please enter a valid email")
-    @Column(unique = true)
+    @Column(nullable = false, unique = true, length = 254)
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
+    // BCrypt hash. NULL = Google-only account until its owner verifies a password through the email link.
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(length = 100)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role = Role.USER;
+
+    @Column(nullable = false)
+    private boolean enabled = true;
 
     @Column(columnDefinition = "TEXT")
     private String bio = "";
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(length = 100)
+    private String location;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(length = 200)
+    private String website;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        normalizeEmail();
+        createdAt = Instant.now();
+        updatedAt = createdAt;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        normalizeEmail();
+        updatedAt = Instant.now();
     }
 
-    // Constructor for creating user without password (for public profile)
-    public User(Long id, String name, String email, String bio, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.bio = bio;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    // Method to get public profile (without password)
-    public User toPublicProfile() {
-        return new User(this.id, this.name, this.email, this.bio, this.createdAt, this.updatedAt);
+    private void normalizeEmail() {
+        if (email != null) email = email.trim().toLowerCase(Locale.ROOT);
     }
 }
-

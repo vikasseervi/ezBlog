@@ -1,12 +1,6 @@
-export const formatDate = (dateInput) => {
-    if (!dateInput) return '';
-
-    const date = new Date(dateInput);
+export const formatDate = (isoString) => {
+    if (!isoString) return '';
+    const date = new Date(isoString);    
     if (Number.isNaN(date.getTime())) return '';
-
-    return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-    });
+    return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 };

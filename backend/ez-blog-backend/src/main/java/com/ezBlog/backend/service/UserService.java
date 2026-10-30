@@ -5,6 +5,7 @@ import com.ezBlog.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -14,14 +15,14 @@ public class UserService {
     private UserRepository userRepository;
 
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmailIgnoreCase(email);
     }
 
     public User save(User user) {
         if (user.getCreatedAt() == null) {
-            user.setCreatedAt(LocalDateTime.now());
+            user.setCreatedAt(Instant.from(LocalDateTime.now()));
         }
-        user.setUpdatedAt(LocalDateTime.now());
+        user.setUpdatedAt(Instant.from(LocalDateTime.now()));
 
         return userRepository.save(user);
     }
@@ -31,6 +32,6 @@ public class UserService {
     }
 
     public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.existsByEmailIgnoreCase(email);
     }
 }

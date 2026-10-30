@@ -1,14 +1,15 @@
--- Sample data for Blog Platform Database
+-- Sample data for ezBlog Platform Database
 -- This file is automatically executed after schema.sql
 
 -- Insert sample users
+-- Sample data for ezBlog (DEVELOPMENT ONLY). Every user's password is: Password123!
 INSERT INTO users (name, email, password, bio, created_at, updated_at) VALUES
-                                                                           ('Vikas Seervi', 'vikas@example.com', 'password123', 'Software developer and tech enthusiast', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                           ('John Doe', 'john@example.com', 'password123', 'Software developer and tech enthusiast', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                           ('Jane Smith', 'jane@example.com', 'password123', 'Content creator and lifestyle blogger', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                           ('Sarah Johnson', 'sarah@example.com', 'password123', 'Travel blogger and photographer', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                           ('Mike Chen', 'mike@example.com', 'password123', 'Food critic and chef', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                           ('Emma Wilson', 'emma@example.com', 'password123', 'Fitness trainer and health coach', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+                                                                           ('Vikas Seervi',  'vikas@example.com', '$2a$10$PZ54NMRlQFtNFyhk7Ohf/uvXHTzN9QQx3ZbkWjCm57xGl./sZVpgS', 'Software developer and tech enthusiast', now(), now()),
+                                                                           ('John Doe',      'john@example.com',  '$2a$10$PZ54NMRlQFtNFyhk7Ohf/uvXHTzN9QQx3ZbkWjCm57xGl./sZVpgS', 'Software developer and tech enthusiast', now(), now()),
+                                                                           ('Jane Smith',    'jane@example.com',  '$2a$10$PZ54NMRlQFtNFyhk7Ohf/uvXHTzN9QQx3ZbkWjCm57xGl./sZVpgS', 'Content creator and lifestyle blogger', now(), now()),
+                                                                           ('Sarah Johnson', 'sarah@example.com', '$2a$10$PZ54NMRlQFtNFyhk7Ohf/uvXHTzN9QQx3ZbkWjCm57xGl./sZVpgS', 'Travel blogger and photographer', now(), now()),
+                                                                           ('Mike Chen',     'mike@example.com',  '$2a$10$PZ54NMRlQFtNFyhk7Ohf/uvXHTzN9QQx3ZbkWjCm57xGl./sZVpgS', 'Food critic and chef', now(), now()),
+                                                                           ('Emma Wilson',   'emma@example.com',  '$2a$10$PZ54NMRlQFtNFyhk7Ohf/uvXHTzN9QQx3ZbkWjCm57xGl./sZVpgS', 'Fitness trainer and health coach', now(), now());
 
 -- Insert sample posts with rich content
 INSERT INTO posts (title, content, excerpt, author_id, category, read_time, published, created_at, updated_at) VALUES
@@ -115,7 +116,7 @@ While becoming more popular, El Nido still feels like a paradise. The limestone 
 
 This ancient town is a photographer''s dream. The lantern-lit streets at night create a magical atmosphere.
 
-Pack your bags and explore these amazing destinations before they become too crowded!', 'Explore hidden gems of Southeast Asia including ancient towns, mountain villages, and pristine islands perfect for authentic travel experiences.', 3, 'Travel', 7, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+Pack your bags and explore these amazing destinations before they become too crowded!', 'Explore hidden gems of Southeast Asia including ancient towns, mountain villages, and pristine islands perfect for authentic travel experiences.', 4, 'Travel', 7, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
                                                                                                                    ('Solo Travel: Self-Discovery', 'Solo travel changed my life. Here''s why everyone should try traveling alone at least once.
 
@@ -143,7 +144,7 @@ Solo travel provides space for introspection. Without constant companionship, yo
 4. Trust your instincts
 5. Embrace the uncertainty
 
-The world is waiting. Don''t let the fear of traveling alone hold you back!', 'Discover why solo travel transforms lives through freedom, self-discovery, and building confidence, with practical tips for your first adventure.', 3, 'Travel', 6, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+The world is waiting. Don''t let the fear of traveling alone hold you back!', 'Discover why solo travel transforms lives through freedom, self-discovery, and building confidence, with practical tips for your first adventure.', 4, 'Travel', 6, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
                                                                                                                    ('The Art of Perfect Pasta', 'Making perfect pasta is both an art and a science. After years of experimentation, here''s what I''ve learned.
 
@@ -173,7 +174,7 @@ Never rinse your pasta! Transfer it directly to the sauce and finish cooking it 
 - Carbonara: Eggs, guanciale, pecorino, and black pepper
 - Aglio e Olio: Garlic, olive oil, and chili flakes
 
-Practice these classics, and you''ll understand the fundamentals of great pasta cooking!', 'Master restaurant-quality pasta techniques from selecting ingredients to achieving perfect al dente texture and classic Italian sauces.', 4, 'Food', 9, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+Practice these classics, and you''ll understand the fundamentals of great pasta cooking!', 'Master restaurant-quality pasta techniques from selecting ingredients to achieving perfect al dente texture and classic Italian sauces.', 5, 'Food', 9, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
                                                                                                                    ('Street Food Around the World', 'Some of my best food experiences have been from street vendors. Here''s a culinary journey through the world''s best street food.
 
@@ -204,7 +205,7 @@ The Jemaa el-Fnaa square transforms into a massive food market at night. The har
 3. Drink bottled water
 4. Trust your instincts
 
-Street food is one of the best ways to experience a culture''s culinary traditions!', 'Embark on a global culinary journey exploring street food from Bangkok pad thai to Marrakech markets, with safety tips included.', 4, 'Food', 8, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+Street food is one of the best ways to experience a culture''s culinary traditions!', 'Embark on a global culinary journey exploring street food from Bangkok pad thai to Marrakech markets, with safety tips included.', 5, 'Food', 8, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
                                                                                                                    ('Mindfulness in the Digital Age', 'In our hyperconnected world, finding moments of peace and presence has become more important than ever.
 
@@ -239,7 +240,7 @@ Take 5 minutes to focus solely on your breath. When your mind wanders (and it wi
 
 Start small. Even 2 minutes of mindfulness practice daily is better than an hour once a week. Consistency matters more than duration.
 
-Finding balance in our digital age isn''t easy, but it''s essential for our wellbeing.', 'Discover practical mindfulness techniques for the digital age, including digital detox strategies and mindful breathing exercises.', 5, 'Lifestyle', 7, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+Finding balance in our digital age isn''t easy, but it''s essential for our wellbeing.', 'Discover practical mindfulness techniques for the digital age, including digital detox strategies and mindful breathing exercises.', 6, 'Lifestyle', 7, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
                                                                                                                    ('A Sustainable Morning Routine', 'Your morning sets the tone for your entire day. Here''s how to create a morning routine that''s both effective and sustainable.
 
@@ -285,7 +286,7 @@ Keep a simple log for the first month to build the habit.
 
 I wake at 6 AM, drink water, do 15 minutes of yoga, meditate for 10 minutes, eat breakfast while reading, and plan my day. It takes about 90 minutes total, and it''s transformed my life.
 
-Remember, the best morning routine is one you''ll actually stick to!', 'Create a sustainable morning routine combining hydration, movement, mindfulness, and planning to start your day with intention and purpose.', 5, 'Lifestyle', 8, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+Remember, the best morning routine is one you''ll actually stick to!', 'Create a sustainable morning routine combining hydration, movement, mindfulness, and planning to start your day with intention and purpose.', 6, 'Lifestyle', 8, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
                                                                                                                    ('Minimalism: Less is More', 'Embracing minimalism changed my life. Here''s why owning less can mean living more.
 
@@ -328,7 +329,7 @@ Begin with something easy like old magazines or expired pantry items. Build mome
 
 Minimalism looks different for everyone. I still have possessions I love and use. The difference is that everything I own serves a purpose or brings joy.
 
-You don''t have to live in a white cube to be a minimalist. Find what works for you.', 'Explore how minimalism creates mental clarity, financial freedom, and environmental consciousness through intentional living practices.', 5, 'Lifestyle', 9, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+You don''t have to live in a white cube to be a minimalist. Find what works for you.', 'Explore how minimalism creates mental clarity, financial freedom, and environmental consciousness through intentional living practices.', 6, 'Lifestyle', 9, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert tags for posts
 INSERT INTO post_tags (post_id, tag) VALUES
@@ -373,3 +374,7 @@ INSERT INTO post_tags (post_id, tag) VALUES
                                          (10, 'Intentional Living'),
                                          (10, 'Sustainability');
 
+
+-- Spread creation times so "newest first" has a stable order (all rows used to share one timestamp)
+UPDATE posts SET created_at = now() - ((11 - id) * interval '1 day'),
+    updated_at = created_at;
